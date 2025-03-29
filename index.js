@@ -10,16 +10,10 @@ const CONFIG = {
     PASSWORD: "", // if you have account with paid games put here
     DEPOT_KEYS_FILE: "ManifestHub/depotkeys.json",
 };
-
-// ✅ Paths
 const OUTPUT_FOLDER = `output_${CONFIG.APP_ID}`;
 const DEPOTDOWNLOADER_FOLDER = path.join(OUTPUT_FOLDER, ".DepotDownloader");
 const LUA_FILE = path.join(OUTPUT_FOLDER, `${CONFIG.APP_ID}.lua`);
-
-// ✅ Ensure output folder exists
 if (!fs.existsSync(OUTPUT_FOLDER)) fs.mkdirSync(OUTPUT_FOLDER, { recursive: true });
-
-// ✅ Load manifestKey
 function getManifestKey() {
     if (!fs.existsSync(CONFIG.DEPOT_KEYS_FILE)) {
         console.error(`❌ Error: ${CONFIG.DEPOT_KEYS_FILE} not found!`);
@@ -33,8 +27,6 @@ function getManifestKey() {
     }
     return key;
 }
-
-// ✅ Download Manifest
 function downloadManifest() {
     const command = `depotdownloader -app ${CONFIG.APP_ID} -depot ${CONFIG.DEPOT_ID} -dir "${OUTPUT_FOLDER}" -username ${CONFIG.USERNAME} -password ${CONFIG.PASSWORD} -manifest-only`;
 
@@ -48,8 +40,6 @@ function downloadManifest() {
         processManifest();
     });
 }
-
-// ✅ Process Manifest
 function processManifest() {
     if (!fs.existsSync(DEPOTDOWNLOADER_FOLDER)) {
         console.error("❌ .DepotDownloader folder not found!");
@@ -67,8 +57,6 @@ function processManifest() {
     const destPath = path.join(OUTPUT_FOLDER, manifestFile);
     fs.renameSync(sourcePath, destPath);
     console.log(`✅ Manifest moved to: ${destPath}`);
-
-    // ✅ Extract MANIFEST_ID from filename
     const match = manifestFile.match(/_(\d+)\.manifest$/);
     if (!match) {
         console.error("❌ Failed to extract MANIFEST_ID from filename!");
@@ -80,8 +68,6 @@ function processManifest() {
     generateLuaScript(MANIFEST_ID);
     cleanUp();
 }
-
-// ✅ Generate Lua Script
 function generateLuaScript(manifestId) {
     const manifestKey = getManifestKey();
     const luaScript = [
@@ -93,8 +79,6 @@ function generateLuaScript(manifestId) {
     fs.writeFileSync(LUA_FILE, luaScript);
     console.log(`✅ Lua script saved to ${LUA_FILE}`);
 }
-
-// ✅ Clean Up
 function cleanUp() {
     fs.rmSync(DEPOTDOWNLOADER_FOLDER, { recursive: true, force: true });
     console.log("✅ Deleted .DepotDownloader folder.");
@@ -107,6 +91,4 @@ function cleanUp() {
         }
     });
 }
-
-// ✅ Start process
 downloadManifest();
