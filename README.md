@@ -10,6 +10,9 @@ git submodule update --init --depth 1
 ```
 
 rename `config.json.example` to `config.json` and edit it to your need.
+> for `DEPOT_ID` select the one that have a big download size,
+>
+> use https://steamdb.info
 
 ## Credits:
 
