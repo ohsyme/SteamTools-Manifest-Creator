@@ -3,32 +3,31 @@ const path = require("path");
 const { exec } = require("child_process");
 
 // ✅ Configuration
-const CONFIG = {
-    APP_ID: 2651280, // use steamdb to get appid
-    DEPOT_ID: 2651281, // use steamdb to get depotid ( pick latest but big size that contains games files  )
-    USERNAME: "", // if you have account with paid games put here 
-    PASSWORD: "", // if you have account with paid games put here
-    DEPOT_KEYS_FILE: "ManifestHub/depotkeys.json",
-};
+const CONFIG = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), { encoding: "utf-8" }));
+
+const DEPOT_KEYS_FILE = path.join(__dirname, "ManifestHub", "depotkeys.json");
 const OUTPUT_FOLDER = `output_${CONFIG.APP_ID}`;
 const DEPOTDOWNLOADER_FOLDER = path.join(OUTPUT_FOLDER, ".DepotDownloader");
 const LUA_FILE = path.join(OUTPUT_FOLDER, `${CONFIG.APP_ID}.lua`);
+
 if (!fs.existsSync(OUTPUT_FOLDER)) fs.mkdirSync(OUTPUT_FOLDER, { recursive: true });
+
 function getManifestKey() {
-    if (!fs.existsSync(CONFIG.DEPOT_KEYS_FILE)) {
-        console.error(`❌ Error: ${CONFIG.DEPOT_KEYS_FILE} not found!`);
+    if (!fs.existsSync(DEPOT_KEYS_FILE)) {
+        console.error(`❌ Error: ${DEPOT_KEYS_FILE} not found!`);
         process.exit(1);
     }
-    const depotKeys = JSON.parse(fs.readFileSync(CONFIG.DEPOT_KEYS_FILE, "utf-8"));
+    const depotKeys = JSON.parse(fs.readFileSync(DEPOT_KEYS_FILE, "utf-8"));
     const key = depotKeys[CONFIG.DEPOT_ID] || "";
     if (!key) {
-        console.error(`❌ Error: No key found for Depot ID ${CONFIG.DEPOT_ID} in ${CONFIG.DEPOT_KEYS_FILE}`);
+        console.error(`❌ Error: No key found for Depot ID ${CONFIG.DEPOT_ID} in ${DEPOT_KEYS_FILE}`);
         process.exit(1);
     }
     return key;
 }
+
 function downloadManifest() {
-    const command = `depotdownloader -app ${CONFIG.APP_ID} -depot ${CONFIG.DEPOT_ID} -dir "${OUTPUT_FOLDER}" -username ${CONFIG.USERNAME} -password ${CONFIG.PASSWORD} -manifest-only`;
+    const command = `depotdownloader -app ${CONFIG.APP_ID} -depot ${CONFIG.DEPOT_ID} -dir "${OUTPUT_FOLDER}" -username ${CONFIG.username} -password ${CONFIG.password} -manifest-only`;
 
     console.log("⏳ Downloading manifest...");
     exec(command, (error, stdout, stderr) => {

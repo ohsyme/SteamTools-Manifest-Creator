@@ -1,3 +1,4 @@
 [submodule "ManifestHub"]
+	shallow = true
 	path = ManifestHub
 	url = https://github.com/SteamAutoCracks/ManifestHub.git
