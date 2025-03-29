@@ -4,10 +4,10 @@ const { exec } = require("child_process");
 
 // ✅ Configuration
 const CONFIG = {
-    APP_ID: 1091500, // use steamdb to get appid
-    DEPOT_ID: 1091501, // use steamdb to get depotid ( pick latest but big size that contains games files  )
-    USERNAME: "", // if you have account with paid games put here 
-    PASSWORD: "", // if you have account with paid games put here
+    APP_ID: 2651280, // use steamdb to get appid
+    DEPOT_ID: 2651281, // use steamdb to get depotid ( pick latest but big size that contains games files  )
+    USERNAME: "zwgzb52544", // if you have account with paid games put here 
+    PASSWORD: "fxouo7499M", // if you have account with paid games put here
     DEPOT_KEYS_FILE: "ManifestHub/depotkeys.json",
 };
 
